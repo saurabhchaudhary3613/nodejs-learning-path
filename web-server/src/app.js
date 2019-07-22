@@ -63,11 +63,31 @@ app.get('/help', (req, res) => {
 // })
 
 app.get('/weather', (req, res) => {
+    console.log(req.query)
+    if(!req.query.address) {
+        return res.send({
+            error: 'Please provide a valid address !'
+        })
+    }
     res.send([
-        {location: 'Delhi', forecast: 'Hot above 30 degree'},
-        {location: 'New York', forecast: 'Cool below 20 degree'}
+        {location: 'Delhi', forecast: 'Hot above 30 degree', address: req.query.address},
+        {location: 'New York', forecast: 'Cool below 20 degree', address: req.query.address}
     ])
 })
+
+app.get('/products', (req, res) => {
+    // console.log(req.query.search)
+    if(!req.query.search) {
+        return res.send({
+            error: 'Please provide a search term !'
+        })
+    }
+    console.log(req.query)
+    res.send({
+        products: []
+    })
+})
+
 app.get('/help/*', (req, res) => {
     res.render('404', {
         title: 'Help - 404 page',
