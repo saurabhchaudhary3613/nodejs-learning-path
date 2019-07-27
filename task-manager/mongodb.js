@@ -92,16 +92,48 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     // 1. Exercise - Use findone on tasks collection  and fins a document usig id
     // 2. use find to fetach all the tasks that are not completed - prind docs to console
 
-    db.collection('tasks').findOne({_id: ObjectID('5d3c09a384acc71f21c27bdd')}, (error, task) => {
-        if(error) {
-            return console.log('Unable to fetch task')
+    // db.collection('tasks').findOne({_id: ObjectID('5d3c09a384acc71f21c27bdd')}, (error, task) => {
+    //     if(error) {
+    //         return console.log('Unable to fetch task')
+    //     }
+    //     console.log(task)
+    // })
+    // db.collection('tasks').find({completed: false}).toArray((error, incompleteTask)=> {
+    //     if(error) {
+    //         return console.log('unable to find task')
+    //     }
+    //     console.log(incompleteTask)
+    // })
+
+    // CRUD - create, read, update and delete
+
+    // update one
+
+   db.collection('users').updateOne({
+        _id: ObjectID('5d3c0170ca2f9e39d0f535eb')
+    }, {
+        $set: {
+            name: 'Nakul'
         }
-        console.log(task)
+        // ,
+        // $inc: {
+        //     age: 1 // increment age by 1
+        // }
+    }).then((result) => {
+        console.log(result);
+    }).catch((error) => {
+        console.log(error);
     })
-    db.collection('tasks').find({completed: false}).toArray((error, incompleteTask)=> {
-        if(error) {
-            return console.log('unable to find task')
-        }
-        console.log(incompleteTask)
+
+    // update many - update all the tasks as completed
+
+    db.collection('tasks').updateMany(
+        { completed : true },
+        { $set: { completed : false }}
+    ).then((result) => {
+        console.log(result);
+    }).catch((error) => {
+        console.log(error);
     })
+
 })
