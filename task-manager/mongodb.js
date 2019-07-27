@@ -22,16 +22,16 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     const db = client.db(databaes)
 
     //insert one document
-    db.collection('users').insertOne({
-        _id: id,
-        name: 'Vikram',
-        age: 35
-    }, (error, result) => {
-        if(error) {
-            return console.log('Unable to insert user')
-        }
-        console.log(result.ops)
-    })  
+    // db.collection('users').insertOne({
+    //     _id: id,
+    //     name: 'Vikram',
+    //     age: 35
+    // }, (error, result) => {
+    //     if(error) {
+    //         return console.log('Unable to insert user')
+    //     }
+    //     console.log(result.ops)
+    // })  
 
     // inset more than documents 
 
@@ -58,4 +58,50 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     //     }
     //     console.log(result.ops)
     // })
+    // 
+    // db.collection('users').findOne({name: 'GA', age:11}, (error, user) => {
+    //     if(error) {
+    //         console.log('Unable to fine user')
+    //     }
+    //     console.log(user)
+    // })
+
+    //Find single document in database 'findOne'
+    // db.collection('users').findOne({_id: ObjectID('5d3c2c5e17bedffd205eeba9')}, (error, user) => {
+    //     if(error) {
+    //         console.log('Unable to fine user')
+    //     }
+    //     console.log(user)
+    // })
+
+    // Find multiple documents in database -> 'find'
+
+    // db.collection('users').find({ age: 31 }).toArray((error, user) => {
+    //     if(error) {
+    //         console.log(error);
+    //     }
+    //     console.log(user);
+    // })
+    // db.collection('users').find({ age: 31 }).count((error, count) => {
+    //     if(error) {
+    //         console.log(error);
+    //     }
+    //     console.log(count);
+    // })
+
+    // 1. Exercise - Use findone on tasks collection  and fins a document usig id
+    // 2. use find to fetach all the tasks that are not completed - prind docs to console
+
+    db.collection('tasks').findOne({_id: ObjectID('5d3c09a384acc71f21c27bdd')}, (error, task) => {
+        if(error) {
+            return console.log('Unable to fetch task')
+        }
+        console.log(task)
+    })
+    db.collection('tasks').find({completed: false}).toArray((error, incompleteTask)=> {
+        if(error) {
+            return console.log('unable to find task')
+        }
+        console.log(incompleteTask)
+    })
 })
