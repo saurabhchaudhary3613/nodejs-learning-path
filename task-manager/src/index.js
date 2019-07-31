@@ -68,6 +68,33 @@ app.get('/users/:id', async (req, res) => {
     // })
 })
 
+//update exiting resource/user using patch
+
+app.patch('/users/:id', async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowupdates = ['email', 'name', 'age', 'password']
+    const isvalidOperation = updates.every((update) => {
+        return allowupdates.includes(update)
+    })
+
+    if(!isvalidOperation) {
+        return res.status(404).send({'error': 'Not a valid update!'})
+    }
+
+    try {
+        const _id = req.params.id
+        const user = await User.findByIdAndUpdate(_id, req.body, {new: true, runValidators: true})
+        console.log(user)
+
+        if(!user) {
+           return  res.status(404).send()
+        }
+        res.send(user)
+    } catch(e) {
+        res.status(400).send(e)
+    }
+})
+
 // Create a new task using post
 app.post('/tasks', async (req, res) => {
     const task = new Task(req.body)
@@ -103,6 +130,31 @@ app.get('/tasks/:id', async (req, res) => {
         res.status(404).send(task)
     } catch(e) {
         res.status(500).send(e)
+    }
+})
+
+// Update a task using patch
+
+app.patch('/tasks/:id', async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowupdates = ['description', 'completed']
+    const isvalidOperation = updates.every((update) => {
+        return allowupdates.includes(update)
+    })
+
+    if(!isvalidOperation) {
+        return res.status(404).send({'error': 'Not a valid update!'})
+    }
+
+    try {
+        const _id = req.params.id
+        const task = await Task.findByIdAndUpdate(_id, req.body, {new: true, runValidators: true})
+        if(!task) {
+           return  res.status(404).send()
+        }
+        res.send(task)
+    } catch(e) {
+        res.status(400).send(e)
     }
 })
 
