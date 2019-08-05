@@ -22,6 +22,7 @@ router.post('/tasks', auth, async (req, res) => {
 })
 
 // Read/fetch /tasks?completed=true
+// Add Pagination - Two parameters - limit, skip - GET /tasks?limit=10&skip=0
 router.get('/tasks', auth, async (req, res) => {
     // const _id = req.params.id
     const match = {}
@@ -31,14 +32,18 @@ router.get('/tasks', auth, async (req, res) => {
     // }
     // console.log('match.completed ', match.completed)
     const completed = req.query.completed
+    
     try {
         // const tasks = await Task.find({})
         let tasks
         if (completed) {
             console.log("completed=", completed)
-             tasks = await Task.find({completed: completed, owner: req.user._id})
+             tasks = await Task.find({
+                 completed: completed, 
+                 owner: req.user._id,
+            }).limit(parseInt(req.query.limit)).skip(parseInt(req.query.skip))
         } else {
-            tasks = await Task.find({owner:req.user._id})
+            tasks = await Task.find({owner:req.user._id}).limit(parseInt(req.query.limit)).skip(parseInt(req.query.skip))
         }
          
         //  await req.user.populate({
