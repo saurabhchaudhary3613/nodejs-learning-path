@@ -21,13 +21,33 @@ router.post('/tasks', auth, async (req, res) => {
     } 
 })
 
-// Read/fetch all tasks from database
+// Read/fetch /tasks?completed=true
 router.get('/tasks', auth, async (req, res) => {
-    const _id = req.params.id
+    // const _id = req.params.id
+    const match = {}
+    console.log(req.query.completed)
+    // if(req.query.completed) {
+    //     match.completed = req.query.completed === 'true'
+    // }
+    // console.log('match.completed ', match.completed)
+    const completed = req.query.completed
     try {
         // const tasks = await Task.find({})
-         const tasks = await Task.findOne({owner: req.user._id})
-        // await req.user.populate('tasks').execPopulate()
+        let tasks
+        if (completed) {
+            console.log("completed=", completed)
+             tasks = await Task.find({completed: completed, owner: req.user._id})
+        } else {
+            tasks = await Task.find({owner:req.user._id})
+        }
+         
+        //  await req.user.populate({
+        //      path: 'tasks',
+        //      match: {
+        //          completed: true
+        //      }
+        //  }).execPopulate()
+        // res.send(req.user.tasks)
         res.send(tasks)
     } catch(e) {
         res.status(500).send(e)
