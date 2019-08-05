@@ -23,6 +23,7 @@ router.post('/tasks', auth, async (req, res) => {
 
 // Read/fetch /tasks?completed=true
 // Add Pagination - Two parameters - limit, skip - GET /tasks?limit=10&skip=0
+// GET /tasks?sortBy=createdAt:desc
 router.get('/tasks', auth, async (req, res) => {
     // const _id = req.params.id
     const match = {}
@@ -32,7 +33,13 @@ router.get('/tasks', auth, async (req, res) => {
     // }
     // console.log('match.completed ', match.completed)
     const completed = req.query.completed
-    
+
+    const sort = {}
+
+    if(req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
     try {
         // const tasks = await Task.find({})
         let tasks
@@ -41,9 +48,12 @@ router.get('/tasks', auth, async (req, res) => {
              tasks = await Task.find({
                  completed: completed, 
                  owner: req.user._id,
-            }).limit(parseInt(req.query.limit)).skip(parseInt(req.query.skip))
+            }).limit(parseInt(req.query.limit)).skip(parseInt(req.query.skip)).sort(sort)
         } else {
-            tasks = await Task.find({owner:req.user._id}).limit(parseInt(req.query.limit)).skip(parseInt(req.query.skip))
+            tasks = await Task.find({owner:req.user._id})
+            .limit(parseInt(req.query.limit))
+            .skip(parseInt(req.query.skip))
+            .sort(sort)
         }
          
         //  await req.user.populate({
