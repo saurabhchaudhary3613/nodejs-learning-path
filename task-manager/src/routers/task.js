@@ -26,7 +26,6 @@ router.post('/tasks', auth, async (req, res) => {
 // GET /tasks?sortBy=createdAt:desc
 router.get('/tasks', auth, async (req, res) => {
     // const _id = req.params.id
-    const match = {}
     console.log(req.query.completed)
     // if(req.query.completed) {
     //     match.completed = req.query.completed === 'true'
@@ -44,7 +43,6 @@ router.get('/tasks', auth, async (req, res) => {
         // const tasks = await Task.find({})
         let tasks
         if (completed) {
-            console.log("completed=", completed)
              tasks = await Task.find({
                  completed: completed, 
                  owner: req.user._id,
